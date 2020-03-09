@@ -17,7 +17,7 @@ import network.mvod_bottleneck_lstm3
 import network.mvod_lstm4
 import network.mvod_lstm5
 from network.predictor import Predictor
-from datasets.vid_dataset import ImagenetDataset
+from datasets.vid_dataset_new import ReducedImagenetDataset as ImagenetDataset
 from config import mobilenetv1_ssd_config
 from utils import box_utils, measurements
 from utils.misc import str2bool, Timer
