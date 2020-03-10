@@ -24,7 +24,7 @@ from torch.optim.lr_scheduler import CosineAnnealingLR, MultiStepLR
 
 from utils.misc import str2bool, Timer, store_labels
 from network.mvod_basenet import MobileVOD, SSD, MobileNetV1, MatchPrior
-from datasets.vid_dataset_new import ReducedImagenetDataset as ImagenetDataset
+from datasets.vid_dataset_new import ImagenetDataset
 from network.multibox_loss import MultiboxLoss
 from config import mobilenetv1_ssd_config
 from dataloaders.data_preprocessing import TrainAugmentation, TestTransform

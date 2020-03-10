@@ -17,7 +17,7 @@ import network.mvod_bottleneck_lstm3
 import network.mvod_lstm4
 import network.mvod_lstm5
 from network.predictor import Predictor
-from datasets.vid_dataset_new import ReducedImagenetDataset as ImagenetDataset
+from datasets.vid_dataset import ImagenetDataset
 from config import mobilenetv1_ssd_config
 from utils import box_utils, measurements
 from utils.misc import str2bool, Timer
@@ -243,14 +243,17 @@ if __name__ == '__main__':
         if class_index == 0:
             continue
         prediction_path = eval_path / f"det_test_{class_name}.txt"
-        ap = compute_average_precision_per_class(
-            true_case_stat[class_index],
-            all_gb_boxes[class_index],
-            prediction_path,
-            args.iou_threshold,
-            use_2007_metric=False
-        )
-        aps.append(ap)
-        print(f"{class_name}: {ap}")
+        try:
+            ap = compute_average_precision_per_class(
+                true_case_stat[class_index],
+                all_gb_boxes[class_index],
+                prediction_path,
+                args.iou_threshold,
+                use_2007_metric=False
+            )
+            aps.append(ap)
+            print(f"{class_name}: {ap}")
+        except:
+            print(f"{class_name}: NaN")
 
     print(f"\nAverage Precision Across All Classes:{sum(aps) / len(aps)}")
