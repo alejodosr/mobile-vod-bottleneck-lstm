@@ -245,12 +245,15 @@ if __name__ == '__main__':
 
     criterion = MultiboxLoss(config.priors, iou_threshold=0.5, neg_pos_ratio=10,
                              center_variance=0.1, size_variance=0.2, device=DEVICE)
-    optimizer = torch.optim.RMSprop(
-        [{'params': [param for name, param in net.pred_encoder.named_parameters()], 'lr': base_net_lr},
-         {'params': [param for name, param in net.pred_decoder.named_parameters()], 'lr': ssd_lr}, ], lr=args.lr,
-        weight_decay=args.weight_decay, momentum=args.momentum)
-    logging.info(f"Learning rate: {args.lr}, Base net learning rate: {base_net_lr}, "
-                 + f"Extra Layers learning rate: {ssd_lr}.")
+    # optimizer = torch.optim.RMSprop(
+    #     [{'params': [param for name, param in net.pred_encoder.named_parameters()], 'lr': base_net_lr},
+    #      {'params': [param for name, param in net.pred_decoder.named_parameters()], 'lr': ssd_lr}, ], lr=args.lr,
+    #     weight_decay=args.weight_decay, momentum=args.momentum)
+    # logging.info(f"Learning rate: {args.lr}, Base net learning rate: {base_net_lr}, "
+    #              + f"Extra Layers learning rate: {ssd_lr}.")
+
+    optimizer = torch.optim.Adam(net.parameters(), lr=1e-4, weight_decay=args.weight_decay)
+    logging.info(f"Adam with learning rate: {1e-4}")
 
     # if args.scheduler == 'multi-step':
     # 	logging.info("Uses MultiStepLR scheduler.")
