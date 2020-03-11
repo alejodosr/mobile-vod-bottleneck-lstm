@@ -16,9 +16,9 @@ import os
 import shutil
 
 dirs = ['ILSVRC2015_VID_train_0000/',
-		'ILSVRC2015_VID_train_0001/',
-		'ILSVRC2015_VID_train_0002/',
-		'ILSVRC2015_VID_train_0003/']
+        'ILSVRC2015_VID_train_0001/',
+        'ILSVRC2015_VID_train_0002/',
+        'ILSVRC2015_VID_train_0003/']
 dirs_val = ['/home/alejo/Downloads/reduced_ILSVRC/Data/VID/val/']
 dirs_test = ['/home/alejo/Downloads/reduced_ILSVRC/Data/VID/test/']
 
@@ -34,112 +34,112 @@ dirs_test = ['/home/alejo/Downloads/reduced_ILSVRC/Data/VID/test/']
 # 					 'n03790512',
 # 					 'n04468005', 'n04530566']
 
-classes_names = 	['__background__',  # always index 0
-					   'airplane',
-					   'motorcycle']
+classes_names = ['__background__',  # always index 0
+                 'airplane',
+                 'motorcycle']
 
-classes_map = 		['__background__',  # always index 0
-					 'n02691156',
-					 'n03790512']
+classes_map = ['__background__',  # always index 0
+               'n02691156',
+               'n03790512']
 
 for dir in dirs:
-	seqs = np.sort(os.listdir(os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Data/VID/train/'+dir)))
-	for seq in seqs:
-		seq_path = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Data/VID/train/', dir, seq)
-		snippet_file = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Data/VID/snippets/train/', dir, seq + ".mp4")
-		relative_path = dir + seq
-		image_list = np.sort(os.listdir(seq_path))
-		count = 0
-		for image in image_list:
-			image_id = image.split('.')[0]
-			anno_file = image_id + '.xml'
-			anno_dir = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Annotations/VID/train/', dir, seq)
-			anno_path = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Annotations/VID/train/', dir, seq, anno_file)
-			objects = ET.parse(anno_path).findall("object")
-			num_objs = len(objects)
-			if num_objs == 0: # discarding images without object
-				continue
-			else:
-				# Find classes
-				root = ET.parse(anno_path).getroot()
-				for obj in root.findall('object'):
-					wanted_class = False
-					for label in classes_map:
-						if obj.find('name').text == label:
-							wanted_class = True
+    seqs = np.sort(os.listdir(os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Data/VID/train/' + dir)))
+    for seq in seqs:
+        seq_path = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Data/VID/train/', dir, seq)
+        snippet_file = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Data/VID/snippets/train/', dir, seq + ".mp4")
+        relative_path = dir + seq
+        image_list = np.sort(os.listdir(seq_path))
+        count = 0
+        for image in image_list:
+            image_id = image.split('.')[0]
+            anno_file = image_id + '.xml'
+            anno_dir = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Annotations/VID/train/', dir, seq)
+            anno_path = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Annotations/VID/train/', dir, seq, anno_file)
+            objects = ET.parse(anno_path).findall("object")
+            num_objs = len(objects)
+            if num_objs == 0:  # discarding images without object
+                continue
+            else:
+                # Find classes
+                root = ET.parse(anno_path).getroot()
+                for obj in root.findall('object'):
+                    wanted_class = False
+                    for label in classes_map:
+                        if obj.find('name').text == label:
+                            wanted_class = True
 
-				if not wanted_class:
-					print(seq_path)
-					print(anno_dir)
-					print(snippet_file)
-					# Removing folders
-					try:
-						shutil.rmtree(seq_path)
-						print("Removing folder: " + seq_path)
-						try:
-							shutil.rmtree(anno_dir)
-							print("Removing folder: " + anno_dir)
-							try:
-								os.remove(snippet_file)
-								print("Removing folder: " + snippet_file)
-								break
-							except OSError as e:
-								print("Error: %s : %s" % (snippet_file, e.strerror))
-						except OSError as e:
-							print("Error: %s : %s" % (anno_dir, e.strerror))
-					except OSError as e:
-						print("Error: %s : %s" % (seq_path, e.strerror))
+                if not wanted_class:
+                    print(seq_path)
+                    print(anno_dir)
+                    print(snippet_file)
+                    # Removing folders
+                    try:
+                        shutil.rmtree(seq_path)
+                        print("Removing folder: " + seq_path)
+                        try:
+                            shutil.rmtree(anno_dir)
+                            print("Removing folder: " + anno_dir)
+                            try:
+                                os.remove(snippet_file)
+                                print("Removing folder: " + snippet_file)
+                                break
+                            except OSError as e:
+                                print("Error: %s : %s" % (snippet_file, e.strerror))
+                        except OSError as e:
+                            print("Error: %s : %s" % (anno_dir, e.strerror))
+                    except OSError as e:
+                        print("Error: %s : %s" % (seq_path, e.strerror))
 
-				count = count + 1
-				print(relative_path+'/'+image_id)
+                count = count + 1
+                print(relative_path + '/' + image_id)
 
 for dir in dirs_val:
-	seqs = np.sort(os.listdir(dir))
-	for seq in seqs:
-		seq_path = os.path.join(dir, seq)
-		snippet_file = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Data/VID/snippets/val/', seq + ".mp4")
-		relative_path = dir + seq
-		image_list = np.sort(os.listdir(seq_path))
-		count = 0
-		for image in image_list:
-			image_id = image.split('.')[0]
-			anno_file = image_id + '.xml'
-			anno_dir = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Annotations/VID/val/', seq)
-			anno_path = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Annotations/VID/val/', seq, anno_file)
-			objects = ET.parse(anno_path).findall("object")
-			num_objs = len(objects)
-			if num_objs == 0: # discarding images without object
-				continue
-			else:
-				# Find classes
-				root = ET.parse(anno_path).getroot()
-				for obj in root.findall('object'):
-					wanted_class = False
-					for label in classes_map:
-						if obj.find('name').text == label:
-							wanted_class = True
+    seqs = np.sort(os.listdir(dir))
+    for seq in seqs:
+        seq_path = os.path.join(dir, seq)
+        snippet_file = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Data/VID/snippets/val/', seq + ".mp4")
+        relative_path = dir + seq
+        image_list = np.sort(os.listdir(seq_path))
+        count = 0
+        for image in image_list:
+            image_id = image.split('.')[0]
+            anno_file = image_id + '.xml'
+            anno_dir = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Annotations/VID/val/', seq)
+            anno_path = os.path.join('/home/alejo/Downloads/reduced_ILSVRC/Annotations/VID/val/', seq, anno_file)
+            objects = ET.parse(anno_path).findall("object")
+            num_objs = len(objects)
+            if num_objs == 0:  # discarding images without object
+                continue
+            else:
+                # Find classes
+                root = ET.parse(anno_path).getroot()
+                for obj in root.findall('object'):
+                    wanted_class = False
+                    for label in classes_map:
+                        if obj.find('name').text == label:
+                            wanted_class = True
 
-				if not wanted_class:
-					print(seq_path)
-					print(anno_dir)
-					print(snippet_file)
-					# Removing folders
-					try:
-						shutil.rmtree(seq_path)
-						print("Removing folder: " + seq_path)
-						try:
-							shutil.rmtree(anno_dir)
-							print("Removing folder: " + anno_dir)
-							try:
-								os.remove(snippet_file)
-								print("Removing folder: " + snippet_file)
-								break
-							except OSError as e:
-								print("Error: %s : %s" % (snippet_file, e.strerror))
-						except OSError as e:
-							print("Error: %s : %s" % (anno_dir, e.strerror))
-					except OSError as e:
-						print("Error: %s : %s" % (seq_path, e.strerror))
+                if not wanted_class:
+                    print(seq_path)
+                    print(anno_dir)
+                    print(snippet_file)
+                    # Removing folders
+                    try:
+                        shutil.rmtree(seq_path)
+                        print("Removing folder: " + seq_path)
+                        try:
+                            shutil.rmtree(anno_dir)
+                            print("Removing folder: " + anno_dir)
+                            try:
+                                os.remove(snippet_file)
+                                print("Removing folder: " + snippet_file)
+                                break
+                            except OSError as e:
+                                print("Error: %s : %s" % (snippet_file, e.strerror))
+                        except OSError as e:
+                            print("Error: %s : %s" % (anno_dir, e.strerror))
+                    except OSError as e:
+                        print("Error: %s : %s" % (seq_path, e.strerror))
 
-				count = count + 1
-				print(relative_path+'/'+image_id)
+                count = count + 1
+                print(relative_path + '/' + image_id)
